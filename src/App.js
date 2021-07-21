@@ -12,6 +12,8 @@ function App() {
     <Section>
       <Navbar />
       <Card />
+      <Card />
+      <Card />
     </Section>
   );
 }
