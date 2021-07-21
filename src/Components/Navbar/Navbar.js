@@ -4,7 +4,7 @@ import Triangle from '../../Images/triangleLogo.png'
 import Search from '../../Images/search.svg'
 
 const Container = styled.div`
-    max-width: 80%;
+    max-width: 90%;
     margin: auto;
     display: block;
 `

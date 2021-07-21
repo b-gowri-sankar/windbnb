@@ -7,3 +7,14 @@ body {
   padding: 0px;
   box-sizing: border-box;
 }
+
+@keyframes model {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
