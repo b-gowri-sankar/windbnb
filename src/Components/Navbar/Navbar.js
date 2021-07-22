@@ -74,7 +74,7 @@ const Navbar = () => {
                 <h3>windbnb</h3>
             </Logo>
                 <SearchForm onClick={() => setShowForm(true)}>
-                    <div>{City}</div>
+                    <div>{City === 'Finland' ? '': City + ','} Finland</div>
                     <div className='add-guests'> {Guest.length === 0 ? 'Add Guests' : Guest}</div>
                     <img src={Search} alt='search icon' />
                 </SearchForm>

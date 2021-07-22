@@ -23,7 +23,7 @@ const Model = styled.div`
     height: 90vh;
     width: 100%;
     padding: 15px;
-    position: absolute;
+    position: fixed;
     top:0%;
     left:0%;
     right: 0%;
@@ -88,13 +88,11 @@ const LocationList = styled.div`
         font-size: 14px;
         cursor: pointer;
     }
-    /* display: none; */
 `;
 
 const GuestCard = styled.div`
     font-size: 14px;
     padding: 10px;
-    display: none;
 `;
 
 const Category = styled.p`
@@ -143,18 +141,33 @@ const NumStays = styled.div`
     justify-content: space-between;
 `;
 
-const FormModel = ({showForm, setShowForm, setCity}) => {
+const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
     const [formData, setFormData] = React.useState({
         location: 'Finland',
-        guest: '0',
+        guest: 0,
     })
 
-    const [Cards, setCards] = React.useState([...CardsList])
+    const [dupeCards, setDupeCards] = React.useState([...CardsList])
+    const [Cards, setCards] = React.useState([...CardsList]);
+
+    const [child, setChild] = React.useState(0);
+    const [adult, setAdult] = React.useState(0);
+
+    const [Display, setDisplay] = React.useState({
+        locationDisplay: 'block',
+        guestDisplay: 'none',
+        locationBorder: 'none',
+        guestBorder: 'none'
+    })
+
 
     const submitClickListener = (e) => {
         e.preventDefault();
         setCity(formData.location)
+        setGuest(formData.guest)
         setShowForm(false)
+        setCards(dupeCards.filter(card => card.city === formData.location && card.maxGuests >= formData.guest ))
+        console.log(Cards)
     }
 
     const changeClickListener = (e) => {
@@ -165,43 +178,84 @@ const FormModel = ({showForm, setShowForm, setCity}) => {
         setFormData({...formData, [e.target.id]:locate})
     }
 
+    const changeCountListener = (type) => {
+        switch (type) {
+            case 'ADD':
+                setFormData({ ...formData, guest: (formData.guest + 1) });
+                setAdult(adult+1)
+                break;
+            case 'SUBSCRACT':
+                if (((formData.guest - 1) < 0) || (adult -1) < 0) {
+                    break;
+                }
+                setFormData({ ...formData, guest: (formData.guest - 1) })
+                setAdult(adult-1)
+                break;
+            case 'SUBSCRACT-C':
+                if (((formData.guest - 1) < 0) || (child - 1) < 0) {
+                    break;
+                }
+                setFormData({ ...formData, guest: (formData.guest - 1) });
+                setChild(child - 1);
+                break;
+            case 'ADD-C':
+                setFormData({ ...formData, guest: (formData.guest + 1) });
+                setChild(child+1)
+                break;
+            default:
+                break;
+        }
+    }
+    
+    const clickContainer = (type) => {
+        switch (type) {
+            case 'LOCATION':
+                setDisplay({ ...Display, locationDisplay: 'block', guestDisplay: 'none', locationBorder:'1px solid black', guestBorder: 'none'});
+                break;
+            case 'GUEST':
+                setDisplay({ ...Display, locationDisplay: 'none', guestDisplay: 'block', locationBorder:'none', guestBorder: '1px solid black' });
+                break;
+            default:
+                break;
+        }
+    }
 
-    const modelComponent = (        <Model>
+    const modelComponent = (<Model>
         <SearchIcon>
             <p>Edit your Search:</p>
             <img src={Close} alt='close icon' onClick={() => {
                 setShowForm(false);
             }} />
         </SearchIcon>
-        <form onSubmit={ e => submitClickListener(e) }>
-            <LocationSlab >
+        <form onSubmit={e => submitClickListener(e)}>
+            <LocationSlab style={{ border: Display.locationBorder, borderRadius: '16px' }} onClick={() => clickContainer('LOCATION')}>
                 <label htmlFor='location'>location</label>
-                <input type='text' value={formData.location} id='location' placeholder='Add Location' onChange={ e => changeClickListener(e) }/>
+                <input type='text' value={formData.location} id='location' placeholder='Add Location' onChange={e => changeClickListener(e)} />
             </LocationSlab>
-            <LocationSlab >
+            <LocationSlab style={{ border: Display.guestBorder, borderRadius: '16px' }} onClick={() => clickContainer('GUEST')}>
                 <label htmlFor='guest'>guest</label>
-                <input type='text' value={formData.guest} id='guest' disabled/>
+                <input type='text' value={formData.guest} id='guest' readOnly />
             </LocationSlab>
-            <LocationList>
-                <li onClick={ e => listClickListener(e, 'Helsinki, Finland') } id='location'><img src={Location} alt='location' />Helsinki, Finland</li>
-                <li onClick={ e => listClickListener(e, 'Turku, Finland') } id='location'><img src={Location} alt='location' />Turku, Finland</li>
-                <li onClick={ e => listClickListener(e, 'Vaasa, Finland') } id='location'><img src={Location} alt='location' />Vaasa, Finland</li>
-                <li onClick={ e => listClickListener(e, 'Oulu, Finland') } id='location'><img src={Location} alt='location' />Oulu, Finland</li>
+            <LocationList style={{ display: Display.locationDisplay }}>
+                <li onClick={e => listClickListener(e, 'Helsinki')} id='location'><img src={Location} alt='location' />Helsinki, Finland</li>
+                <li onClick={e => listClickListener(e, 'Turku')} id='location'><img src={Location} alt='location' />Turku, Finland</li>
+                <li onClick={e => listClickListener(e, 'Vaasa')} id='location'><img src={Location} alt='location' />Vaasa, Finland</li>
+                <li onClick={e => listClickListener(e, 'Oulu')} id='location'><img src={Location} alt='location' />Oulu, Finland</li>
             </LocationList>
-            <GuestCard>
+            <GuestCard style={{ display: Display.guestDisplay }}>
                 <Category>Adults</Category>
                 <p>Ages 13 or above</p>
                 <AddGuests>
-                    <img src={Minus} alt='minus icon' />
-                    <p>0</p>
-                    <img src={Plus} alt='addition icon' />
+                    <img src={Minus} alt='minus icon' onClick={() => changeCountListener('SUBSCRACT')} />
+                    <p>{adult}</p>
+                    <img src={Plus} alt='addition icon' onClick={() => changeCountListener('ADD')} />
                 </AddGuests>
                 <Category>Children</Category>
                 <p>Ages 13 or above</p>
                 <AddGuests>
-                    <img src={Minus} alt='minus icon' />
-                    <p>0</p>
-                    <img src={Plus} alt='addition icon' />
+                    <img src={Minus} alt='minus icon' onClick={() => changeCountListener('SUBSCRACT-C')} />
+                    <p>{child}</p>
+                    <img src={Plus} alt='addition icon' onClick={() => changeCountListener('ADD-C')} />
                 </AddGuests>
             </GuestCard>
             <Button>
@@ -210,12 +264,13 @@ const FormModel = ({showForm, setShowForm, setCity}) => {
                 <span>Search</span>
             </Button>
         </form>
-    </Model>)
+    </Model>);
+    console.log(formData);
     return (
         <>
             {showForm && modelComponent}
             <NumStays>
-                <h1>Stays in {formData.location}</h1>
+                <h1>Stays in {formData.location === 'Finland' ? '': formData.location + ','} Finland</h1>
                 <p>{ Cards.length }+ stays</p>
             </NumStays>
             {Cards && Cards.map((card, index) =>
