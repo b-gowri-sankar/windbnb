@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Triangle from '../../Images/triangleLogo.png'
 import Search from '../../Images/search.svg'
+import FormModel from '../formModel/formModel'
 
 const Container = styled.div`
     max-width: 90%;
@@ -61,19 +62,25 @@ const SearchForm = styled.div`
 `;
 
 const Navbar = () => {
+    const [showForm, setShowForm] = React.useState(false);
+    const [City, setCity] = React.useState('Finland');
+    const [Guest, setGuest] = React.useState('')
+    
     return (
-        <Container>
+        <>
+            <Container>
             <Logo>
                 <img src={Triangle} alt=" Website Logo" />
                 <h3>windbnb</h3>
             </Logo>
-            <SearchForm>
-                <div> Turku, Finland</div>
-                <div className='add-guests'> Add Guests</div>
-                <img src={Search} alt='search icon' />
-            </SearchForm>
-            <h1>Stays in Finland</h1>
-        </Container>
+                <SearchForm onClick={() => setShowForm(true)}>
+                    <div>{City}</div>
+                    <div className='add-guests'> {Guest.length === 0 ? 'Add Guests' : Guest}</div>
+                    <img src={Search} alt='search icon' />
+                </SearchForm>
+            </Container>
+            <FormModel showForm={showForm} setShowForm={setShowForm} setCity={setCity} setGuest={ setGuest }/>
+        </>
     )
 }
 

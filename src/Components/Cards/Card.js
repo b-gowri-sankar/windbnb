@@ -27,15 +27,6 @@ const CardRight = styled.div`
     display:inline-flex;
     font-size: 14px;
     color: gray;
-    p:first-child{
-        color:rgb(79, 79, 79);
-        font-weight: bold;
-        border: 2px solid rgb(79, 79, 79);
-        padding: 0.2em 1em;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-right: .5em;
-    }
 
     *{
         padding: .5em;
@@ -49,26 +40,37 @@ const StartRating = styled.p`
         object-fit: contain;
     }
 `;
+const P = styled.p`
+    color:rgb(79, 79, 79);
+        font-weight: bold;
+        border: 2px solid rgb(79, 79, 79);
+        padding: 0.2em 1em;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-right: .5em;
+`;
+
 const Title = styled.h3`
     margin-top: -5px;
 `;
 
-const Card = () => {
+
+const Card = ({ card }) => {
     return (
         <CardStyle>
-            <img src="https://images.unsplash.com/photo-1556020685-ae41abfc9365?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80" alt=' Nice apartment in center of Helsinki '/>
+            <img src={ card.photo } alt={card.title}/>
             <CardInfo>
                 <CardRight>
-                    <p>Super Host</p>
+                    {card.superHost ? <P>Super Host</P>:'' }
                     <FontChange> Entire apartment</FontChange>
                     <FontChange>3 beds</FontChange>
                 </CardRight>
                 <StartRating>
-                    <img src={Star} alt='star'/> 4.34
+                    <img src={Star} alt='star'/> {card.rating}
                 </StartRating>
             </CardInfo>
             <Title>
-            Turku Nordic Home near city center
+            {card.title}
             </Title>
         </CardStyle>
     )

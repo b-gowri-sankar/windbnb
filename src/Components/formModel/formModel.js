@@ -5,6 +5,8 @@ import SearchWhite from '../../Images/searchWhite.svg'
 import Location from '../../Images/location.svg'
 import Plus from '../../Images/add.svg'
 import Minus from '../../Images/minus.svg'
+import { CardsList } from './CardsList'
+import Card from '../Cards/Card'
 
 const model = keyframes`
     0% {
@@ -84,6 +86,7 @@ const LocationList = styled.div`
         width: 100%;
         color: grey;
         font-size: 14px;
+        cursor: pointer;
     }
     /* display: none; */
 `;
@@ -129,54 +132,97 @@ const Button = styled.button`
     display: flex;
     justify-content: center;
     border-radius: 14px;
+    cursor: pointer;
     /* margin-top: 15px; */
 `;
 
-const FormModel = () => {
+const NumStays = styled.div`
+    max-width: 90%;
+    margin:auto;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const FormModel = ({showForm, setShowForm, setCity}) => {
+    const [formData, setFormData] = React.useState({
+        location: 'Finland',
+        guest: '0',
+    })
+
+    const [Cards, setCards] = React.useState([...CardsList])
+
+    const submitClickListener = (e) => {
+        e.preventDefault();
+        setCity(formData.location)
+        setShowForm(false)
+    }
+
+    const changeClickListener = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value })
+    }
+
+    const listClickListener = (e, locate) => {
+        setFormData({...formData, [e.target.id]:locate})
+    }
+
+
+    const modelComponent = (        <Model>
+        <SearchIcon>
+            <p>Edit your Search:</p>
+            <img src={Close} alt='close icon' onClick={() => {
+                setShowForm(false);
+            }} />
+        </SearchIcon>
+        <form onSubmit={ e => submitClickListener(e) }>
+            <LocationSlab >
+                <label htmlFor='location'>location</label>
+                <input type='text' value={formData.location} id='location' placeholder='Add Location' onChange={ e => changeClickListener(e) }/>
+            </LocationSlab>
+            <LocationSlab >
+                <label htmlFor='guest'>guest</label>
+                <input type='text' value={formData.guest} id='guest' disabled/>
+            </LocationSlab>
+            <LocationList>
+                <li onClick={ e => listClickListener(e, 'Helsinki, Finland') } id='location'><img src={Location} alt='location' />Helsinki, Finland</li>
+                <li onClick={ e => listClickListener(e, 'Turku, Finland') } id='location'><img src={Location} alt='location' />Turku, Finland</li>
+                <li onClick={ e => listClickListener(e, 'Vaasa, Finland') } id='location'><img src={Location} alt='location' />Vaasa, Finland</li>
+                <li onClick={ e => listClickListener(e, 'Oulu, Finland') } id='location'><img src={Location} alt='location' />Oulu, Finland</li>
+            </LocationList>
+            <GuestCard>
+                <Category>Adults</Category>
+                <p>Ages 13 or above</p>
+                <AddGuests>
+                    <img src={Minus} alt='minus icon' />
+                    <p>0</p>
+                    <img src={Plus} alt='addition icon' />
+                </AddGuests>
+                <Category>Children</Category>
+                <p>Ages 13 or above</p>
+                <AddGuests>
+                    <img src={Minus} alt='minus icon' />
+                    <p>0</p>
+                    <img src={Plus} alt='addition icon' />
+                </AddGuests>
+            </GuestCard>
+            <Button>
+                <img src={SearchWhite}
+                    alt='search icon' />
+                <span>Search</span>
+            </Button>
+        </form>
+    </Model>)
     return (
-        <Model>
-            <SearchIcon>
-                <p>Edit your Search:</p>
-                <img src={Close} alt='close icon' />
-            </SearchIcon>
-            <form>
-                <LocationSlab>
-                    <label for='location'>location</label>
-                    <input type='text' value='' id='location' placeholder='Add Location'/>
-                </LocationSlab>
-                <LocationSlab>
-                    <label for='guest'>guest</label>
-                    <input type='text' value='0' id='guest' disabled/>
-                </LocationSlab>
-                <LocationList>
-                    <li><img src={Location} alt='location' />Helsinki, Finland</li>
-                    <li><img src={Location} alt='location' />Turku, Finland</li>
-                    <li><img src={Location} alt='location' />Vaasa, Finland</li>
-                    <li><img src={Location} alt='location' />Oulu, Finland</li>
-                </LocationList>
-                <GuestCard>
-                    <Category>Adults</Category>
-                    <p>Ages 13 or above</p>
-                    <AddGuests>
-                        <img src={Minus} alt='minus icon' />
-                        <p>0</p>
-                        <img src={Plus} alt='addition icon' />
-                    </AddGuests>
-                    <Category>Children</Category>
-                    <p>Ages 13 or above</p>
-                    <AddGuests>
-                        <img src={Minus} alt='minus icon' />
-                        <p>0</p>
-                        <img src={Plus} alt='addition icon' />
-                    </AddGuests>
-                </GuestCard>
-                <Button>
-                    <img src={SearchWhite}
-                        alt='search icon' />
-                    <span>Search</span>
-                </Button>
-            </form>
-        </Model>
+        <>
+            {showForm && modelComponent}
+            <NumStays>
+                <h1>Stays in {formData.location}</h1>
+                <p>{ Cards.length }+ stays</p>
+            </NumStays>
+            {Cards && Cards.map((card, index) =>
+                <Card card={card} key={ index }/>
+            )}
+
+        </>
     )
 }
 
