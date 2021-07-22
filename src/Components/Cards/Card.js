@@ -15,6 +15,10 @@ const CardStyle = styled.div`
         border-radius: 16px;
     }
 
+    @media only screen and (min-width: 750px){
+        margin-bottom: 10px;
+    }
+
 `
 const CardInfo = styled.div`
     display: flex;
@@ -24,8 +28,8 @@ const FontChange = styled.p`
     
 `;
 const CardRight = styled.div`
-    display:inline-flex;
-    font-size: 14px;
+    display:flex;
+    font-size: 12px;
     color: gray;
 
     *{

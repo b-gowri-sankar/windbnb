@@ -31,6 +31,10 @@ const Model = styled.div`
     background-color: white;
     box-sizing: border-box;
     animation:${model} ease-in-out 0.5s;
+  @media only screen and (min-width: 750px){
+      height: 80vh;
+  }
+
 `;
 
 
@@ -73,6 +77,9 @@ const LocationList = styled.div`
     list-style: none;
     display: block;
     width: 100%;
+    box-shadow: rgb(0 0 0 / 10%) 0px 1px 6px;
+    border-radius: 16px;
+    margin-bottom: 10px;
     img{
         color: grey;
         margin-bottom: -6px;
@@ -82,17 +89,22 @@ const LocationList = styled.div`
     li{
         padding: 1em;
         display: block;
-        box-shadow: rgb(0 0 0 / 10%) 0px 1px 6px;
         width: 100%;
         color: grey;
         font-size: 14px;
         cursor: pointer;
     }
+
+
 `;
 
 const GuestCard = styled.div`
     font-size: 14px;
     padding: 10px;
+    @media only screen and (min-width: 750px){
+        grid-column-start: 2;
+        grid-column-end: 3;
+    }
 `;
 
 const Category = styled.p`
@@ -135,10 +147,45 @@ const Button = styled.button`
 `;
 
 const NumStays = styled.div`
-    max-width: 90%;
+    max-width: 95%;
     margin:auto;
     display: flex;
     justify-content: space-between;
+    h1{
+        font-size: 22px;
+        font-weight: bold;
+    }
+`;
+
+const FormDiv = styled.div`
+    @media only screen and (min-width: 750px){
+        display: flex;
+        div{
+            flex-basis: 50%;
+        }
+    }
+`;
+
+const HintGrid = styled.div`
+    @media only screen and (min-width: 750px){
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+`;
+
+const CardsDiv = styled.div`
+    @media only screen and (min-width: 750px){
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    @media only screen and (min-width: 1080px){
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+    }
+
 `;
 
 const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
@@ -228,14 +275,17 @@ const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
             }} />
         </SearchIcon>
         <form onSubmit={e => submitClickListener(e)}>
+            <FormDiv>
             <LocationSlab style={{ border: Display.locationBorder, borderRadius: '16px' }} onClick={() => clickContainer('LOCATION')}>
                 <label htmlFor='location'>location</label>
                 <input type='text' value={formData.location} id='location' placeholder='Add Location' onChange={e => changeClickListener(e)} />
             </LocationSlab>
-            <LocationSlab style={{ border: Display.guestBorder, borderRadius: '16px' }} onClick={() => clickContainer('GUEST')}>
+                <LocationSlab style={{ border: Display.guestBorder, borderRadius: '16px' }} onClick={() => clickContainer('GUEST')}>
                 <label htmlFor='guest'>guest</label>
                 <input type='text' value={formData.guest} id='guest' readOnly />
-            </LocationSlab>
+                </LocationSlab>
+            </FormDiv>
+            <HintGrid>
             <LocationList style={{ display: Display.locationDisplay }}>
                 <li onClick={e => listClickListener(e, 'Helsinki')} id='location'><img src={Location} alt='location' />Helsinki, Finland</li>
                 <li onClick={e => listClickListener(e, 'Turku')} id='location'><img src={Location} alt='location' />Turku, Finland</li>
@@ -257,7 +307,8 @@ const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
                     <p>{child}</p>
                     <img src={Plus} alt='addition icon' onClick={() => changeCountListener('ADD-C')} />
                 </AddGuests>
-            </GuestCard>
+                </GuestCard>
+            </HintGrid>
             <Button>
                 <img src={SearchWhite}
                     alt='search icon' />
@@ -273,9 +324,11 @@ const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
                 <h1>Stays in {formData.location === 'Finland' ? '': formData.location + ','} Finland</h1>
                 <p>{ Cards.length }+ stays</p>
             </NumStays>
+            <CardsDiv>
             {Cards && Cards.map((card, index) =>
                 <Card card={card} key={ index }/>
-            )}
+                )}
+            </CardsDiv>
 
         </>
     )

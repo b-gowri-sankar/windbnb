@@ -2,7 +2,8 @@ import './App.css';
 import styled from 'styled-components'
 import Navbar from './Components/Navbar/Navbar';
 const Section = styled.div`
-  width: 100%;
+ max-width: 85%;
+ margin: auto;
 `
 
 

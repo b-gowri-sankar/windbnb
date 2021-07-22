@@ -8,11 +8,18 @@ const Container = styled.div`
     max-width: 90%;
     margin: auto;
     display: block;
+    @media only screen and ( min-width: 750px){
+        display: flex;
+        justify-content: space-between;
+        flex: 1 1;
+    }
+
 `
 const Logo = styled.div`
     display: inline-flex;
     padding: 0px;
     margin: 0px;
+    padding-top: 10px;
     color: #EB5757;
     height: 15vh;
     img{
@@ -58,7 +65,11 @@ const SearchForm = styled.div`
     .add-guests{
         color: grey;
     }
-
+    @media only screen and ( min-width: 750px){
+        height: 100%;
+        margin: 0px;
+        margin-top: 20px;
+    }
 `;
 
 const Navbar = () => {
@@ -69,13 +80,13 @@ const Navbar = () => {
     return (
         <>
             <Container>
-            <Logo>
-                <img src={Triangle} alt=" Website Logo" />
-                <h3>windbnb</h3>
-            </Logo>
+                <Logo>
+                    <img src={Triangle} alt=" Website Logo" />
+                    <h3>windbnb</h3>
+                </Logo>
                 <SearchForm onClick={() => setShowForm(true)}>
                     <div>{City === 'Finland' ? '': City + ','} Finland</div>
-                    <div className='add-guests'> {Guest.length === 0 ? 'Add Guests' : Guest}</div>
+                    <div className='add-guests'> {Guest.length === 0 ? 'Add Guests' : Guest + ' Guests'}</div>
                     <img src={Search} alt='search icon' />
                 </SearchForm>
             </Container>
