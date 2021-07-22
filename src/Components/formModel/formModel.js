@@ -214,7 +214,6 @@ const FormModel = ({showForm, setShowForm, setCity, setGuest}) => {
         setGuest(formData.guest)
         setShowForm(false)
         setCards(dupeCards.filter(card => card.city === formData.location && card.maxGuests >= formData.guest ))
-        console.log(Cards)
     }
 
     const changeClickListener = (e) => {
